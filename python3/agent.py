@@ -100,11 +100,11 @@ class Agent():
             log(f"I'm on a bomb!")
             if non_wall_tiles:
                 if powerups_in_range:
-                    action = move_towards_powerup(surrounding_tiles, powerups, my_location)
+                    action = move_towards_powerup(non_wall_tiles, powerups, my_location)
                 elif ammo_in_range:
-                    action = move_towards_ammo(surrounding_tiles, ammo_cache, my_location)
+                    action = move_towards_ammo(non_wall_tiles, ammo_cache, my_location)
                 else:
-                    action = run_from_bomb(surrounding_tiles, bombs, my_location)
+                    action = run_from_bomb(non_wall_tiles, bombs, my_location)
             else:
                 action = no_move()
 
@@ -113,20 +113,20 @@ class Agent():
         elif bombs_in_range and bomb_ticks < 4:
             log("There's a bomb nearby!")
             if non_wall_tiles:
-                run_from_bomb(surrounding_tiles, bombs, my_location)
+                run_from_bomb(non_wall_tiles, bombs, my_location)
             else:
                 action = no_move()
 
         elif powerups_in_range:
             if non_wall_tiles:
-                action = move_towards_powerup(surrounding_tiles, powerups, my_location)
+                action = move_towards_powerup(non_wall_tiles, powerups, my_location)
             else:
                 action = no_move()
 
         # if there's some ammo in range - try to pickup
         elif ammo_in_range:
             if non_wall_tiles:
-                action = move_towards_ammo(surrounding_tiles, ammo_cache, my_location)
+                action = move_towards_ammo(non_wall_tiles, ammo_cache, my_location)
             else:
                 action = no_move()
 
@@ -137,21 +137,21 @@ class Agent():
             distance_to_other_player = helpers.manhattan_distance(my_location, adversary_location)
             log (f"Distance to player: {distance_to_other_player} | me: {my_location}, adv: {adversary_location}")
 
-            if distance_to_other_player < MIN_DISTANCE_TO_ADVERSARY: 
-                if ammo > 0:
+            if distance_to_other_player < MIN_DISTANCE_TO_ADVERSARY * 2: 
+                if ammo > 0 and distance_to_other_player < MIN_DISTANCE_TO_ADVERSARY:
                     # we've got ammo + we're near the adversary, let's place a bomb
                     log("Drop a bomb! 💣")
                     action = "bomb"
                 else:
                     # run away!
                     log("RUN AWAY!!!! 🏃‍♂️")
-                    adversary_move = helpers.get_furthest_tile_from_closest_item(surrounding_tiles, [adversary_location], my_location)
+                    adversary_move = helpers.get_furthest_tile_from_closest_item(non_wall_tiles, [adversary_location], my_location)
                     action = helpers.move_to_tile(my_location, adversary_move) 
 
             else:
                 # no ammo or not close to adversary, chase adversary
                 log("chase adversary 🦸‍♂️")
-                adversary_move = helpers.get_nearest_tile_to_closest_item(surrounding_tiles, [adversary_location], my_location)
+                adversary_move = helpers.get_nearest_tile_to_closest_item(non_wall_tiles, [adversary_location], my_location)
                 action = helpers.move_to_tile(my_location, adversary_move) 
 
         log (f"Moving '{action}'")
@@ -189,8 +189,7 @@ def no_move():
     return ''
 
 def log(message: str):
-    if AgentID == "0":
-        print(f"{datetime.datetime.now()} - {message}")
+    print(f"{datetime.datetime.now()} - {message}")
 
 
 def main():

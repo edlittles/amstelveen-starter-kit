@@ -119,7 +119,7 @@ def get_questionable_tiles(tiles, game_state):
         if tile_entity is None:
             questionable_tiles.append(tile)
         else:
-            if tile not in BLAST_LIST and tile_entity not in ['x', 'm', 'o', 'w']:
+            if tile not in BLAST_LIST and tile_entity not in ['x', 'm', 'o', 'w', 'b']:
                 questionable_tiles.append(tile)
     return questionable_tiles
 
@@ -240,12 +240,18 @@ def get_closest_tile_to_nearest_powerup(tiles, powerups, player_location) -> tup
 # furthest tile from nearest item
 def get_furthest_tile_from_closest_item(tiles_list, items_list, player_location) -> tuple:
     distances = get_distances_to_item(tiles_list, items_list, player_location)
-    return max(distances, key=distances.get)
+    try:
+        return max(distances, key=distances.get)
+    except:
+        return None
 
 # closest tile to nearest item
 def get_nearest_tile_to_closest_item(tiles_list, items_list, player_location) -> tuple:
     distances = get_distances_to_item(tiles_list, items_list, player_location)
-    return min(distances, key=distances.get)
+    try:
+        return min(distances, key=distances.get)
+    except:
+        return None
 
 # distance calc for surrounding tiles and nearest item, distance method can be overloaded
 def get_distances_to_item(tiles_list, items_list, player_location, distance_func=manhattan_distance) -> dict:
