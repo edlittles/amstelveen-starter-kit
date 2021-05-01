@@ -128,18 +128,21 @@ def get_questionable_tiles(tiles, game_state):
 def move_to_tile(location, tile):
 
     # see where the tile is relative to our current location
-    diff = tuple(x-y for x, y in zip(location, tile))
-    
-    # return the action that moves in the direction of the tile
-    if diff == (0,1):
-        action = 'down'
-    elif diff == (0,-1):
-        action = 'up'
-    elif diff == (1,0):
-        action = 'left'
-    elif diff == (-1,0):
-        action = 'right'
-    else:
+    try:
+        diff = tuple(x-y for x, y in zip(location, tile))
+        
+        # return the action that moves in the direction of the tile
+        if diff == (0,1):
+            action = 'down'
+        elif diff == (0,-1):
+            action = 'up'
+        elif diff == (1,0):
+            action = 'left'
+        elif diff == (-1,0):
+            action = 'right'
+        else:
+            action = ''
+    except: 
         action = ''
     
     return action

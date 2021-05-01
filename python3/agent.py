@@ -137,8 +137,8 @@ class Agent():
             distance_to_other_player = helpers.manhattan_distance(my_location, adversary_location)
             log (f"Distance to player: {distance_to_other_player} | me: {my_location}, adv: {adversary_location}")
 
-            if distance_to_other_player < MIN_DISTANCE_TO_ADVERSARY * 2: 
-                if ammo > 0 and distance_to_other_player < MIN_DISTANCE_TO_ADVERSARY:
+            if distance_to_other_player < MIN_DISTANCE_TO_ADVERSARY: 
+                if ammo > 0:
                     # we've got ammo + we're near the adversary, let's place a bomb
                     log("Drop a bomb! 💣")
                     action = "bomb"
